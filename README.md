@@ -58,3 +58,20 @@
 }
 ```
 
+## 执行
+
+linux
+
+```shell
+chmod +x monitor_ssl_linux_amd64
+./monitor_ssl_linux_amd64 -c /to/path/config.json
+```
+
+windows
+
+```powershell
+.\monitor_ssl.exe -c /to/path/config.json
+```
+
+
+

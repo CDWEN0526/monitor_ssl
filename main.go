@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"os"
 	"sync"
@@ -57,7 +58,7 @@ func getDamainRecordsList(key string, secret string, domain string) ([]string, e
 // 获取阿里云域名解析列表
 func getRecordsList(key string, secret string) ([]string, error) {
 	var wg sync.WaitGroup
-	maxConcurrent := 3
+	maxConcurrent := 1
 	semaphore := make(chan struct{}, maxConcurrent)
 	domain_list, err := getDamainList(key, secret)
 	result := make([]string, 0)
@@ -134,7 +135,7 @@ func txGetDamainRecordsList(id string, key string, domain string) ([]string, err
 // 获取腾讯云域名解析列表
 func txGetRecordsList(id string, key string) ([]string, error) {
 	var wg sync.WaitGroup
-	maxConcurrent := 3
+	maxConcurrent := 1
 	semaphore := make(chan struct{}, maxConcurrent)
 	domain_list, err := txGetDamainList(id, key)
 	result := make([]string, 0)
@@ -174,6 +175,7 @@ func getCertValidTime(domainList []string) (map[string]int, error) {
 	resultMutex := &sync.Mutex{}
 
 	for _, domain := range domainList {
+		fmt.Println("获取证书信息:", domain)
 		wg.Add(1)
 		go func(domain string) {
 			defer wg.Done()
@@ -195,8 +197,8 @@ func getCertValidTime(domainList []string) (map[string]int, error) {
 }
 
 // 读取config.json文件
-func readConfig() (map[string]interface{}, error) {
-	file, err := os.Open("config.json")
+func readConfig(configPath string) (map[string]interface{}, error) {
+	file, err := os.Open(configPath)
 	if err != nil {
 		return nil, err
 	}
@@ -260,13 +262,29 @@ var days_due int
 
 func main() {
 	startTime := time.Now()
+
+	// 获取执行参数
+	configPath := flag.String("c", "", "配置文件路径")
+	// 解析命令行参数
+	flag.Parse()
+
+	// 打印接收到的参数
+	if *configPath != "" {
+		fmt.Println("配置文件路径:", *configPath)
+	} else {
+		fmt.Println("未指定 -c 参数")
+		return
+	}
+
 	// 初始化全局变量config
 	var err error
-	config, err = readConfig()
+	config, err = readConfig(*configPath)
 	if err != nil {
 		fmt.Println("读取配置文件失败:", err)
 		return
 	}
+
+	fmt.Println("正在执行程序，请耐心等待...")
 	// 并发设置，到期天数设置
 	concurrent = int(config["concurrence"].(float64))
 	days_due = int(config["alarm_days"].(float64))
