@@ -1,0 +1,28 @@
+{
+    "concurrence": 100,
+
+    "alarm_days": 30,
+
+    "email":{
+        "host": "smtp.163.com",
+        "port": "465",
+        "user": "xxxxxxx@163.com",
+        "pass": "xxxxxxx",
+        "to": ["123456789@qq.com"]
+    },
+    
+    "aliyun": [
+        {"key":"LTzzzzzzzzzzzzzz","secret":"Vxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","note":"账户名称"},
+        {"key":"LTxxxxxxxxxxxxxx","secret":"8Gzzzzzzzzzzzzzzzzzzzzzzzzzzzz","note":"账户名称"}
+
+    ],
+
+    "tencent": [
+        {"SecretId":"AKxxxxxxxxxxxxxxxx","SecretKey":"Woxxxxxxxxxxxxxxxxxxxxx","note":"账户名称"}
+    ],
+
+    "other" : [
+        "www.baidu.com",
+        "www.qq.com"
+    ]
+}
